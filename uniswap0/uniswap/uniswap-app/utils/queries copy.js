@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import { contract, routerContract, tokenContract } from './contract';
+import { contract, tokenContract, routerContract } from './contract';
 import { toEth, toWei } from './ether-utils';
 
 export const swapEthToToken = async (tokenName, amount) => {
@@ -91,7 +91,7 @@ export async function swapTokenToToken(srcToken, destToken, amount) {
   }
 }
 
-//uniswap
+// uniswap real
 
 export const getEthPrice = async () => {
   try {
@@ -163,3 +163,36 @@ getTokenPrice();
 // };
 
 // logBalance();
+// async function comprarToken(cantidadEther) {
+//   try {
+//     // Definir la cantidad de ethers a intercambiar
+//     const cantidadEtherEnWei = toWei(cantidadEther);
+
+//     // Obtener la instancia del contrato del router
+//     const router = await routerContract();
+
+//     // Definir la ruta de intercambio (ether -> token)
+//     const ruta = [
+//       '0xb53509f682f09df252C9A66f1f67c559Ba30103f', // dirección de ethers en la red Ethereum
+//       '0x415fe71d7140a1103e2963611d37eac0ba511fd7', // dirección del contrato del token
+//     ];
+//     console.log(hola);
+//     // Ejecutar la transacción de intercambio
+//     const tx = await router.swapExactETHForTokens(
+//       0, // cantidad mínima de tokens de salida
+//       ruta, // ruta de intercambio
+//       ethers.constants.AddressZero, // dirección del destinatario (opcional)
+//       Date.now() + 1000 * 60 * 10, // límite de tiempo para la transacción (10 minutos)
+//       { value: cantidadEtherEnWei } // valor en ethers a enviar con la transacción
+//     );
+//     console.log('espera');
+//     // Esperar a que se complete la transacción
+//     const receipt = await tx.wait();
+//     console.log('Transacción completada:', receipt);
+//   } catch (error) {
+//     console.error('Error al comprar el token:', error);
+//   }
+// }
+
+// // Uso de la función para comprar el token con 1 ether
+// comprarToken(0.01);
