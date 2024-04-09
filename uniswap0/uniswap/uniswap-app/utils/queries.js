@@ -7,6 +7,10 @@ import {
 } from './contract';
 import { toEth, toWei } from './ether-utils';
 
+const WETH_ADDRESS = '0xb53509f682f09df252C9A66f1f67c559Ba30103f';
+const TOKEN_ADDRESS = '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7';
+const WALLET_ADDRESS = '0xdbdbae70108e4ae35eb98397e65e16ed2a051723';
+
 export const swapEthToToken = async (tokenName, amount) => {
   try {
     let tx = { value: toWei(amount) };
@@ -105,10 +109,7 @@ export const getEthPrice = async () => {
 
     // Definir los parámetros de entrada
     const amountIn = 1000000;
-    const path = [
-      '0xb53509f682f09df252C9A66f1f67c559Ba30103f',
-      '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7',
-    ];
+    const path = [WETH_ADDRESS, TOKEN_ADDRESS];
 
     // Llamar a la función del contrato para obtener las cantidades
     const amounts = await contractObj.getAmountsOut(amountIn, path);
@@ -131,8 +132,8 @@ export const getTokenPrice = async () => {
     const contractObj = await routerContract();
 
     // Definir el token de salida y el token de entrada (ethers)
-    const tokenOut = '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7'; // Token de salida
-    const tokenIn = '0xb53509f682f09df252C9A66f1f67c559Ba30103f'; // Token de entrada (ethers)
+    const tokenOut = TOKEN_ADDRESS; // Token de salida
+    const tokenIn = WETH_ADDRESS; // Token de entrada (ethers)
 
     // Definir la cantidad de salida deseada (1 unidad del token de salida)
     // const amountOut = ethers.utils.parseUnits('1', 18); // Suponiendo que el token de salida tiene 18 decimales
@@ -149,7 +150,7 @@ export const getTokenPrice = async () => {
 
     console.log(
       'Cantidad de ethers necesarios para recibir 1 unidad del token de salida:',
-      ethersNeeded * 10 ** 18
+      ethersNeeded * 10 ** 14
     );
   } catch (error) {
     console.log(error);
@@ -160,43 +161,71 @@ getTokenPrice();
 
 export const tokenBalance = async () => {
   try {
-    const tokenContractObj = await tokenContract(
-      '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7'
-    );
+    const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
     console.log(tokenContractObj);
 
     const name = await tokenContractObj.name();
-    const balance = await tokenContractObj.balanceOf(
-      '0xdbdbae70108e4ae35eb98397e65e16ed2a051723'
-    );
+    const balance = await tokenContractObj.balanceOf(WALLET_ADDRESS);
+    const formatedBalance = toEth(balance).toString();
     console.log(name);
-    console.log(toEth(balance).toString());
+    console.log(formatedBalance);
+    return formatedBalance;
   } catch (error) {
     console.log(error);
   }
 };
 
-tokenBalance();
+// tokenBalance();
 
 export const wethBalance = async () => {
   try {
-    const wethContractObj = await wethContract(
-      '0xb53509f682f09df252C9A66f1f67c559Ba30103f'
-    );
+    const wethContractObj = await wethContract(WETH_ADDRESS);
     console.log(wethContractObj);
-    let ethBalance;
-    let wethBalance;
-    let falopaCoinABalance;
 
     const name = await wethContractObj.name();
-    const balance = await wethContractObj.balanceOf(
-      '0xdbdbae70108e4ae35eb98397e65e16ed2a051723'
-    );
+    const balance = await wethContractObj.balanceOf(WALLET_ADDRESS);
+    const formatedBalance = toEth(balance).toString();
     console.log(name);
-    console.log(toEth(balance).toString());
+    console.log(formatedBalance);
+    return formatedBalance;
   } catch (error) {
     console.log(error);
   }
 };
 
-wethBalance();
+// wethBalance();
+
+const swap = async () => {
+  const routerObj = await routerContract();
+  if (!routerObj) {
+    console.error('No se pudo obtener el contrato del router');
+    return;
+  }
+
+  const signer = await routerObj.provider.getSigner();
+  const initialTokenBalance = await tokenBalance();
+  const initialWethBalance = await wethBalance();
+  console.log(initialTokenBalance, initialWethBalance);
+
+  try {
+    const tx = await routerObj.connect(signer).swapExactTokensForTokens(
+      toWei('1'), // Cantidad exacta de tokens de entrada (1 token)
+      0, // Cantidad mínima de tokens de salida
+      [
+        // Ruta de tokens (de TOKEN_ADDRESS a WETH_ADDRESS)
+        TOKEN_ADDRESS,
+        WETH_ADDRESS,
+      ],
+      signer.getAddress(), // Dirección del destinatario de los tokens de salida
+      Math.floor(Date.now() / 1000) + 60 * 10 // Plazo de validez de la transacción
+    );
+    await tx.wait();
+    const afterSwapTokenBalance = await tokenBalance();
+    const afterSwapWethBalance = await wethBalance();
+    console.log(afterSwapTokenBalance, afterSwapWethBalance);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+swap();
