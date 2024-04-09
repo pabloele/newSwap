@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { UniswapABI, routerABI, wethABI } from './Uniswap';
+import { UniswapABI, erc20ABI, routerABI, wethABI } from './Uniswap';
 import { CustomTokenABI } from './CustomToken';
 // const address = '0xeD697701e8b9C39CB8A5dAC98355d035Fb5e6389'; //mumbai
 
@@ -8,7 +8,7 @@ export const tokenContract = async (address) => {
   const { ethereum } = window;
   if (ethereum) {
     const signer = provider.getSigner();
-    const contractReader = new ethers.Contract(address, CustomTokenABI, signer);
+    const contractReader = new ethers.Contract(address, erc20ABI, signer);
     return contractReader;
   }
 };

@@ -1,5 +1,10 @@
 import { BigNumber, ethers } from 'ethers';
-import { contract, routerContract, tokenContract } from './contract';
+import {
+  contract,
+  routerContract,
+  tokenContract,
+  wethContract,
+} from './contract';
 import { toEth, toWei } from './ether-utils';
 
 export const swapEthToToken = async (tokenName, amount) => {
@@ -153,13 +158,45 @@ export const getTokenPrice = async () => {
 
 getTokenPrice();
 
-// export const logBalance = async (address) => {
-//   const contractObj = await tokenContract();
-//   let ethBalance;
-//   let wethBalance;
-//   let falopaCoinABalance;
-//   // falopaCoinABalance = await contractObj.balanceOf(address);
-//   console.log('**************', falopaCoinABalance);
-// };
+export const tokenBalance = async () => {
+  try {
+    const tokenContractObj = await tokenContract(
+      '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7'
+    );
+    console.log(tokenContractObj);
 
-// logBalance();
+    const name = await tokenContractObj.name();
+    const balance = await tokenContractObj.balanceOf(
+      '0xdbdbae70108e4ae35eb98397e65e16ed2a051723'
+    );
+    console.log(name);
+    console.log(toEth(balance).toString());
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+tokenBalance();
+
+export const wethBalance = async () => {
+  try {
+    const wethContractObj = await wethContract(
+      '0xb53509f682f09df252C9A66f1f67c559Ba30103f'
+    );
+    console.log(wethContractObj);
+    let ethBalance;
+    let wethBalance;
+    let falopaCoinABalance;
+
+    const name = await wethContractObj.name();
+    const balance = await wethContractObj.balanceOf(
+      '0xdbdbae70108e4ae35eb98397e65e16ed2a051723'
+    );
+    console.log(name);
+    console.log(toEth(balance).toString());
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+wethBalance();
