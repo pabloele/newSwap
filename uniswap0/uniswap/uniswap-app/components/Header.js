@@ -10,7 +10,7 @@ const Header = () => {
   const { address } = useAccount();
 
   const notifyConectWallet = () => {
-    toast.error('Connect your falopa wallet', { duration: 2000 });
+    toast.error('Connect your wallet', { duration: 2000 });
   };
 
   useEffect(() => {
@@ -18,7 +18,6 @@ const Header = () => {
       <>
         <TokenBalance name={'falopaCoinA'} walletAddress={address} />
         <TokenBalance name={'falopaCoinB'} walletAddress={address} />
-        <TokenBalance name={'falopaCoinC'} walletAddress={address} />
       </>
     );
   }, [address]);

@@ -13,7 +13,6 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 
 const { chains, provider } = configureChains(
-  // const configuredChains = configureChains(
   [chain.polygonMumbai],
   [
     infuraProvider({

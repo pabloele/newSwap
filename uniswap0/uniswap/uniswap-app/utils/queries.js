@@ -10,6 +10,7 @@ import { toEth, toWei } from './ether-utils';
 const WETH_ADDRESS = '0xb53509f682f09df252C9A66f1f67c559Ba30103f';
 const TOKEN_ADDRESS = '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7';
 const WALLET_ADDRESS = '0xdbdbae70108e4ae35eb98397e65e16ed2a051723';
+// const WALLET_ADDRESS = '0x3dAc46614976755900eC019070cdb85154D2290c';
 
 export const swapEthToToken = async (tokenName, amount) => {
   try {
@@ -162,10 +163,11 @@ getTokenPrice();
 export const tokenBalance = async () => {
   try {
     const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
-    console.log(tokenContractObj);
+    const routerObj = await routerContract();
+    const walletAddress = await routerObj.signer.getAddress();
 
     const name = await tokenContractObj.name();
-    const balance = await tokenContractObj.balanceOf(WALLET_ADDRESS);
+    const balance = await tokenContractObj.balanceOf(walletAddress);
     const formatedBalance = toEth(balance).toString();
     console.log(name);
     console.log(formatedBalance);
@@ -175,15 +177,15 @@ export const tokenBalance = async () => {
   }
 };
 
-// tokenBalance();
+tokenBalance();
 
 export const wethBalance = async () => {
   try {
+    const routerObj = await routerContract();
+    const walletAddress = await routerObj.signer.getAddress();
     const wethContractObj = await wethContract(WETH_ADDRESS);
-    console.log(wethContractObj);
-
     const name = await wethContractObj.name();
-    const balance = await wethContractObj.balanceOf(WALLET_ADDRESS);
+    const balance = await wethContractObj.balanceOf(walletAddress);
     const formatedBalance = toEth(balance).toString();
     console.log(name);
     console.log(formatedBalance);
@@ -193,9 +195,72 @@ export const wethBalance = async () => {
   }
 };
 
-// wethBalance();
+wethBalance();
 
-const swap = async () => {
+export const tokenAllowance = async () => {
+  try {
+    const routerObj = await routerContract();
+    const walletAddress = await routerObj.signer.getAddress();
+    console.log(walletAddress);
+    const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
+    const name = await tokenContractObj.name();
+    const allowance = await tokenContractObj.allowance(
+      walletAddress,
+      routerObj.address
+    );
+    const formattedAllowance = toEth(allowance).toString();
+    console.log('Nombre del token:', name);
+    console.log('Alloance:', formattedAllowance);
+
+    return formattedAllowance;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const wethAllowance = async () => {
+  try {
+    const routerObj = await routerContract();
+    const walletAddress = await routerObj.signer.getAddress();
+    console.log(walletAddress);
+    const wethContractObj = await wethContract(WETH_ADDRESS);
+    const name = await wethContractObj.name();
+    const allowance = await wethContractObj.allowance(
+      walletAddress,
+      routerObj.address
+    );
+    const formattedAllowance = toEth(allowance).toString();
+    console.log('Nombre del token:', name);
+    console.log('Alloance:', formattedAllowance);
+
+    return formattedAllowance;
+  } catch (error) {
+    console.log(error);
+  }
+};
+wethAllowance();
+tokenAllowance();
+
+export const increaseTokenAllowance = async () => {
+  try {
+    const routerObj = await routerContract();
+    const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
+    const walletAddress = await routerObj.signer.getAddress();
+    console.log(walletAddress);
+    const name = await tokenContractObj.name();
+    const totalAmount = await tokenBalance();
+    console.log(totalAmount);
+    const allowance = await tokenContractObj.approve(
+      routerObj.address,
+      toWei(totalAmount).toString()
+    );
+    console.log('Aprobación exitosa:', allowance);
+  } catch (error) {
+    console.log(error);
+  }
+};
+increaseTokenAllowance();
+
+const swapTokensToWeth = async () => {
   const routerObj = await routerContract();
   if (!routerObj) {
     console.error('No se pudo obtener el contrato del router');
@@ -209,7 +274,7 @@ const swap = async () => {
 
   try {
     const tx = await routerObj.connect(signer).swapExactTokensForTokens(
-      toWei('1'), // Cantidad exacta de tokens de entrada (1 token)
+      toWei('5'), // Cantidad exacta de tokens de entrada (1 token)
       0, // Cantidad mínima de tokens de salida
       [
         // Ruta de tokens (de TOKEN_ADDRESS a WETH_ADDRESS)
@@ -228,4 +293,59 @@ const swap = async () => {
   }
 };
 
-swap();
+swapTokensToWeth();
+
+// export const checkFeeMovement = async () => {
+//   const provider = new ethers.providers.Web3Provider(window.ethereum);
+//   const { ethereum } = window;
+
+//   if (ethereum) {
+//     try {
+//       const feeToSetterAddress = '0xdbdBAe70108E4AE35EB98397e65E16ED2A051723';
+//       // Consultar el balance de la dirección feeToSetter
+//       const balance = await provider.getBalance(feeToSetterAddress);
+//       console.log(
+//         'Balance en feeToSetter:',
+//         ethers.utils.formatEther(balance),
+//         'ETH'
+//       );
+//       // Consultar las transacciones recientes de la dirección feeToSetter
+//       // Obtener las transacciones recientes relacionadas con feeToSetter
+//       const latestBlockNumber = await provider.getBlockNumber();
+//       const startBlockNumber = latestBlockNumber - 100; // Obtener transacciones de los últimos 100 bloques
+//       const feeTransactions = [];
+
+//       for (let i = startBlockNumber; i <= latestBlockNumber; i++) {
+//         const block = await provider.getBlock(i);
+
+//         for (const txHash of block.transactions) {
+//           const tx = await provider.getTransaction(txHash);
+//           if (tx.from === feeToSetterAddress || tx.to === feeToSetterAddress) {
+//             feeTransactions.push(tx);
+//           }
+//         }
+//       }
+
+//       console.log(
+//         'Transacciones recientes relacionadas con feeToSetter:',
+//         feeTransactions
+//       );
+//     } catch (error) {
+//       console.log('Error al verificar el movimiento del fee:', error);
+//     }
+//   }
+// };
+// checkFeeMovement();
+// Función para reclamar el fee
+// export const claimFee = async () => {
+//   try {
+//     const routerObj = await routerContract();
+//     const signer = await routerObj.provider.getSigner();
+//     const transaction = await routerObj.connect(signer).;
+//     await transaction.wait();
+//     console.log('Fee reclamado correctamente');
+//   } catch (error) {
+//     console.log('Error al reclamar el fee:', error);
+//   }
+// };
+// claimFee();
