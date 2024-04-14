@@ -15,25 +15,25 @@ const TokenBalance = ({ name, walletAddress }) => {
   const notifyError = (msg) => toast.error(msg, { duration: 6000 });
   const notifySuccess = (msg) => toast.success('Transaction completed');
 
-  useEffect(() => {
-    if (name && walletAddress) {
-      fetchTokenBalance();
-      fetchTokenAddress();
-    } else {
-      setBalance('-');
-    }
-  }, [name, walletAddress]);
+  // useEffect(() => {
+  //   if (name && walletAddress) {
+  //     fetchTokenBalance();
+  //     fetchTokenAddress();
+  //   } else {
+  //     setBalance('-');
+  //   }
+  // }, [name, walletAddress]);
 
-  const fetchTokenBalance = async () => {
-    const bal = await getTokenBalance(name, walletAddress);
-    const fBal = ethers.utils.formatUnits(bal.toString(), 18);
-    setBalance(fBal.toString());
-  };
+  // const fetchTokenBalance = async () => {
+  //   const bal = await getTokenBalance(name, walletAddress);
+  //   const fBal = ethers.utils.formatUnits(bal.toString(), 18);
+  //   setBalance(fBal.toString());
+  // };
 
-  const fetchTokenAddress = async () => {
-    const address = await getTokenAddress(name);
-    setTokenAddress(address);
-  };
+  // const fetchTokenAddress = async () => {
+  //   const address = await getTokenAddress(name);
+  //   setTokenAddress(address);
+  // };
 
   return (
     <div className="flex mx-2">

@@ -12,19 +12,19 @@ export const tokenContract = async (address) => {
     return contractReader;
   }
 };
-export const contract = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const { ethereum } = window;
-  if (ethereum) {
-    const signer = provider.getSigner();
-    const contractReader = new ethers.Contract(
-      '0xed697701e8b9c39cb8a5dac98355d035fb5e6389',
-      UniswapABI,
-      signer
-    );
-    return contractReader;
-  }
-};
+// export const contract = async () => {
+//   const provider = new ethers.providers.Web3Provider(window.ethereum);
+//   const { ethereum } = window;
+//   if (ethereum) {
+//     const signer = provider.getSigner();
+//     const contractReader = new ethers.Contract(
+//       '0xed697701e8b9c39cb8a5dac98355d035fb5e6389',
+//       UniswapABI,
+//       signer
+//     );
+//     return contractReader;
+//   }
+// };
 // uniswap
 export const wethContract = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
