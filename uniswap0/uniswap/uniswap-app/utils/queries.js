@@ -1,10 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import {
-  contract,
-  routerContract,
-  mtb24Contract,
-  wethContract,
-} from './contract';
+import { routerContract, mtb24Contract, wethContract } from './contract';
 import { toEth, toWei } from './ether-utils';
 const WETH_ADDRESS = process.env.NEXT_PUBLIC_WETH_ADDRESS;
 const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_MTB24_ADDRESS;
@@ -28,12 +23,13 @@ export const tokenBalance = async () => {
   }
 };
 
-tokenBalance();
+// tokenBalance();
 
 export const wethBalance = async () => {
   try {
     const routerObj = await routerContract();
     const walletAddress = await routerObj.signer.getAddress();
+    console.log(wall);
     const wethContractObj = await wethContract(WETH_ADDRESS);
     const name = await wethContractObj.name();
     console.log(name);
@@ -48,7 +44,7 @@ export const wethBalance = async () => {
   }
 };
 
-wethBalance();
+// wethBalance();
 
 export const tokenAllowance = async () => {
   try {
@@ -70,7 +66,7 @@ export const tokenAllowance = async () => {
     console.log(error);
   }
 };
-tokenAllowance();
+// tokenAllowance();
 
 export const wethAllowance = async () => {
   try {
@@ -92,7 +88,7 @@ export const wethAllowance = async () => {
     console.log(error);
   }
 };
-wethAllowance();
+// wethAllowance();
 
 export const increaseTokenAllowance = async (amount) => {
   try {
@@ -143,8 +139,8 @@ export const increaseWethAllowance = async (amount) => {
   }
 };
 
-// increaseWethAllowance(0.00001);
-wethAllowance();
+// increaseWethAllowance(0);
+// wethAllowance();
 
 export const getTokenPrice = async () => {
   try {
@@ -168,7 +164,7 @@ export const getTokenPrice = async () => {
   }
 };
 
-getTokenPrice();
+// getTokenPrice();
 
 // increaseTokenAllowance();
 
@@ -215,8 +211,9 @@ export const swapTokensToWeth = async (tokenAmount) => {
 // swapTokensToWeth();
 
 export const swapWethToTokens = async (tokenAmount) => {
-  console.log(typeof tokenAmount);
+  console.log(tokenAmount);
   const exactTokenAmount = Math.floor(tokenAmount);
+  console.log(exactTokenAmount);
   const allowanceStatus = await wethAllowance();
   console.log('Status de aprobación: ', allowanceStatus);
   const routerObj = await routerContract();
@@ -232,7 +229,8 @@ export const swapWethToTokens = async (tokenAmount) => {
 
   try {
     const tx = await routerObj.connect(signer).swapTokensForExactTokens(
-      toWei(exactTokenAmount.toString()),
+      // toWei(exactTokenAmount.toString()),
+      toWei('1'),
 
       toWei(initialWethBalance), // Cantidad mínima de tokens de salida
       [
@@ -243,6 +241,7 @@ export const swapWethToTokens = async (tokenAmount) => {
       signer.getAddress(), // Dirección del destinatario de los tokens de salida
       Math.floor(Date.now() / 1000) + 60 * 10 // Plazo de validez de la transacción
     );
+    console.log('hola');
     const receipt = await tx.wait();
     console.log(receipt);
     const afterSwapTokenBalance = await tokenBalance();

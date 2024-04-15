@@ -72,6 +72,7 @@ const SwapComponent = () => {
     let receipt;
 
     if (srcToken === WETH && destToken !== WETH) {
+      console.log('hola');
       receipt = await swapWethToTokens(outputValue);
     } else if (srcToken !== WETH && destToken === WETH) {
       receipt = await swapTokensToWeth(inputValue);
@@ -91,7 +92,7 @@ const SwapComponent = () => {
       const allowance = await wethAllowance();
       console.log(allowance, inputValue);
       if (allowance < inputValue) {
-        const receipt = await increaseWethAllowance(inputValue);
+        const receipt = await increaseWethAllowance(inputValue * 1.2);
         console.log(receipt);
       }
 

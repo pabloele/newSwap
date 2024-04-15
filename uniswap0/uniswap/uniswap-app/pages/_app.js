@@ -42,7 +42,7 @@ const { provider, chains } = configureChains(
     }),
   ]
 );
-// console.log(configuredChains);
+
 const { connectors } = getDefaultWallets({
   appName: 'Uniswap',
   chains,
