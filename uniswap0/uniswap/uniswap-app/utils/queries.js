@@ -228,8 +228,7 @@ export const swapWethToTokens = async (tokenAmount) => {
 
   try {
     const tx = await routerObj.connect(signer).swapTokensForExactTokens(
-      // toWei(exactTokenAmount.toString()),
-      toWei('1'),
+      toWei(exactTokenAmount.toString()),
 
       toWei(initialWethBalance), // Cantidad mínima de tokens de salida
       [
