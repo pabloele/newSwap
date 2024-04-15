@@ -163,7 +163,7 @@ export const getTokenPrice = async () => {
   }
 };
 
-// getTokenPrice();
+getTokenPrice();
 
 // increaseTokenAllowance();
 

@@ -11,6 +11,7 @@ import {
 
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
 
 const OPsepolia = {
@@ -28,11 +29,15 @@ const OPsepolia = {
     },
   },
 };
+
 const { provider, chains } = configureChains(
   [OPsepolia],
   [
-    infuraProvider({
-      apiKey: process.env.NEXT_PUBLIC_API_KEY,
+    // infuraProvider({
+    //   apiKey: process.env.NEXT_PUBLIC_API_KEY,
+    // }),
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
     }),
 
     jsonRpcProvider({
