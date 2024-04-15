@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   getTokenPrice,
-  hasValidAllowance,
   increaseAllowance,
   increaseTokenAllowance,
   increaseWethAllowance,
-  swapEthToToken,
-  swapTokenToEth,
-  swapTokenToToken,
   swapTokensToWeth,
   swapWethToTokens,
   tokenAllowance,

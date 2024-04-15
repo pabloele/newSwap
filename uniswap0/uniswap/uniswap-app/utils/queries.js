@@ -29,7 +29,6 @@ export const wethBalance = async () => {
   try {
     const routerObj = await routerContract();
     const walletAddress = await routerObj.signer.getAddress();
-    console.log(wall);
     const wethContractObj = await wethContract(WETH_ADDRESS);
     const name = await wethContractObj.name();
     console.log(name);
