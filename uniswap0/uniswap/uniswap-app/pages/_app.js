@@ -13,16 +13,7 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
 
-// const { chains, provider } = configureChains(
-//   [chain.polygonMumbai],
-//   [
-//     infuraProvider({
-//       apiKey: process.env.NEXT_PUBLIC_API_KEY,
-//     }),
-//   ]
-// );
-console.log(typeof jsonRpcProvider);
-const customChain = {
+const OPsepolia = {
   id: 11155420,
   name: 'OP Sepolia',
   network: 'optimismSepolia',
@@ -38,7 +29,7 @@ const customChain = {
   },
 };
 const { provider, chains } = configureChains(
-  [customChain],
+  [OPsepolia],
   [
     infuraProvider({
       apiKey: process.env.NEXT_PUBLIC_API_KEY,

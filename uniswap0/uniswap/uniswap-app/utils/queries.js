@@ -2,170 +2,18 @@ import { BigNumber, ethers } from 'ethers';
 import {
   contract,
   routerContract,
-  tokenContract,
+  mtb24Contract,
   wethContract,
 } from './contract';
 import { toEth, toWei } from './ether-utils';
-const WETH_ADDRESS = '0x74A4A85C611679B73F402B36c0F84A7D2CcdFDa3';
-const TOKEN_ADDRESS = '0x5d34DcA9d19C9e9D55b5F35adAf0aBed2fC3b996';
-
-// **************************************************************************************
-// const WETH_ADDRESS = '0xb53509f682f09df252C9A66f1f67c559Ba30103f';
-// const TOKEN_ADDRESS = '0x415fE71d7140a1103E2963611d37eAc0Ba511FD7';
-
-// export const swapEthToToken = async (tokenName, amount) => {
-//   try {
-//     let tx = { value: toWei(amount) };
-//     const contractObj = await contract();
-//     const data = await contractObj.swapEthToToken(tokenName, tx);
-
-//     const receipt = await data.wait();
-//     return receipt;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const getTokenBalance = async (tokenName, address) => {
-//   const contractObj = await contract();
-//   const balance = contractObj.getBalance(tokenName, address);
-//   return balance;
-// };
-
-// export const getTokenAddress = async (tokenName) => {
-//   try {
-//     const contractObj = await contract();
-//     const address = await contractObj.getTokenAddress(tokenName);
-//     return address;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const swapTokenToEth = async (tokenName, amount) => {
-//   try {
-//     const contractObj = await contract();
-//     const data = await contractObj.swapTokenToEth(tokenName, toWei(amount));
-//     const receipt = await data.wait();
-//     return receipt;
-//   } catch (error) {}
-// };
-
-// export const increaseAllowance = async (tokenName, amount) => {
-//   try {
-//     const contractObj = await contract();
-//     const address = await contractObj.getTokenAddress(tokenName);
-//     const tokenContractObj = await tokenContract(address);
-//     const data = await tokenContractObj.approve(
-//       '0xed697701e8b9c39cb8a5dac98355d035fb5e6389',
-//       toWei(amount)
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const hasValidAllowance = async (owner, tokenName, amount) => {
-//   try {
-//     const contractObj = await contract();
-//     const address = await contractObj.getTokenAddress(tokenName);
-
-//     const tokenContractObj = await tokenContract(address);
-
-//     const data = await tokenContractObj.allowance(
-//       owner,
-//       '0xed697701e8b9c39cb8a5dac98355d035fb5e6389'
-//     );
-
-//     const result = BigNumber.from(data.toString()).gte(
-//       BigNumber.from(toWei(amount))
-//     );
-//     return result;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export async function swapTokenToToken(srcToken, destToken, amount) {
-//   try {
-//     const contractObj = await contract();
-//     const data = await contractObj.swapTokenToToken(
-//       srcToken,
-//       destToken,
-//       toWei(amount)
-//     );
-
-//     const receipt = await data.wait();
-//     return receipt;
-//   } catch (e) {
-//     return parseErrorMsg(e);
-//   }
-// }
-
-// **************************************************************************************
+const WETH_ADDRESS = process.env.NEXT_PUBLIC_WETH_ADDRESS;
+const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_MTB24_ADDRESS;
 
 //viniswap
 
-// export const getEthPrice = async () => {
-//   try {
-//     // Obtener la instancia del contrato router
-//     const contractObj = await routerContract();
-
-//     // Definir los parámetros de entrada
-//     const amountIn = 1000000;
-//     const path = [WETH_ADDRESS, TOKEN_ADDRESS];
-
-//     // Llamar a la función del contrato para obtener las cantidades
-//     const amounts = await contractObj.getAmountsOut(amountIn, path);
-
-//     // Convertir los objetos BigNumber a números legibles para humanos con la precisión adecuada
-//     const price = amounts.map((amount) => ethers.utils.formatUnits(amount, 6)); // Suponiendo una precisión decimal de 6
-
-//     console.log('Cantidades:', price);
-//     return price;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// getEthPrice();
-
-// export const getTokenPrice = async () => {
-//   try {
-//     // Obtener la instancia del contrato router
-//     const contractObj = await routerContract();
-
-//     // Definir el token de salida y el token de entrada (ethers)
-//     const tokenOut = TOKEN_ADDRESS; // Token de salida
-//     const tokenIn = WETH_ADDRESS; // Token de entrada (ethers)
-
-//     // Definir la cantidad de salida deseada (1 unidad del token de salida)
-//     // const amountOut = ethers.utils.parseUnits('1', 18); // Suponiendo que el token de salida tiene 18 decimales
-//     const amountOut = 1; // Suponiendo que el token de salida tiene 18 decimales
-
-//     // Obtener las cantidades de entrada necesarias
-//     const amounts = await contractObj.getAmountsIn(amountOut, [
-//       tokenOut,
-//       tokenIn,
-//     ]);
-
-//     // Obtener la cantidad de ethers necesarios para recibir 1 unidad del token de salida
-//     const ethersNeeded = ethers.utils.formatEther(amounts[0]);
-
-//     console.log(
-//       'Cantidad de ethers necesarios para recibir 1 unidad del token de salida:',
-//       ethersNeeded * 10 ** 14
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// getTokenPrice();
-
 export const tokenBalance = async () => {
   try {
-    const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
+    const tokenContractObj = await mtb24Contract(TOKEN_ADDRESS);
     const routerObj = await routerContract();
     const walletAddress = await routerObj.signer.getAddress();
 
@@ -207,7 +55,7 @@ export const tokenAllowance = async () => {
     const routerObj = await routerContract();
     const walletAddress = await routerObj.signer.getAddress();
     console.log(walletAddress);
-    const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
+    const tokenContractObj = await mtb24Contract(TOKEN_ADDRESS);
     const name = await tokenContractObj.name();
     const allowance = await tokenContractObj.allowance(
       walletAddress,
@@ -246,29 +94,85 @@ export const wethAllowance = async () => {
 };
 wethAllowance();
 
-export const increaseTokenAllowance = async () => {
+export const increaseTokenAllowance = async (amount) => {
   try {
     const routerObj = await routerContract();
-    const tokenContractObj = await tokenContract(TOKEN_ADDRESS);
+    const tokenContractObj = await mtb24Contract(TOKEN_ADDRESS);
     const walletAddress = await routerObj.signer.getAddress();
     console.log(walletAddress);
     const name = await tokenContractObj.name();
     const totalAmount = await tokenBalance();
     console.log(totalAmount);
-    const allowance = await tokenContractObj.approve(
+
+    const approvalTx = await tokenContractObj.approve(
       routerObj.address,
-      toWei(totalAmount).toString()
+      toWei(amount.toString()).toString()
     );
-    console.log('Aprobación exitosa:', allowance);
-    const allowanceStatus = await tokenAllowance();
-    console.log('Status de aprobación: ', allowanceStatus);
+
+    const receipt = await approvalTx.wait();
+    console.log('Approval transaction receipt:', receipt);
+
+    return receipt;
   } catch (error) {
     console.log(error);
   }
 };
+
+// increaseTokenAllowance(0);
+export const increaseWethAllowance = async (amount) => {
+  console.log(amount);
+  try {
+    const routerObj = await routerContract();
+    const wethContractObj = await wethContract(WETH_ADDRESS);
+    const walletAddress = await routerObj.signer.getAddress();
+    console.log(walletAddress);
+    const name = await wethContractObj.name();
+    const totalAmount = await wethBalance();
+    console.log(totalAmount);
+    const approvalTx = await wethContractObj.approve(
+      routerObj.address,
+      toWei(amount.toString()).toString()
+    );
+
+    const receipt = await approvalTx.wait();
+    console.log('Approval transaction receipt:', receipt);
+
+    return receipt;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// increaseWethAllowance(0.00001);
+wethAllowance();
+
+export const getTokenPrice = async () => {
+  try {
+    const routerObj = await routerContract(); // Obtener instancia del contrato del router
+    const amountOut = toWei('1'); // Definir la cantidad de salida deseada (1 unidad del token)
+
+    // Definir la ruta de intercambio (de TOKEN_ADDRESS a WETH_ADDRESS)
+    const path = [TOKEN_ADDRESS, WETH_ADDRESS];
+
+    // Obtener las cantidades de entrada necesarias
+    const amounts = await routerObj.getAmountsOut(amountOut, path);
+
+    // El precio será la cantidad de WETH necesaria para recibir 1 unidad del token de salida
+    const priceInWeth = ethers.utils.formatEther(amounts[1]);
+    console.log('Precio del token en WETH:', priceInWeth);
+
+    return priceInWeth;
+  } catch (error) {
+    console.error('Error al obtener el precio del token:', error);
+    throw error;
+  }
+};
+
+getTokenPrice();
+
 // increaseTokenAllowance();
 
-const swapTokensToWeth = async () => {
+export const swapTokensToWeth = async (tokenAmount) => {
   const allowanceStatus = await tokenAllowance();
   console.log('Status de aprobación: ', allowanceStatus);
   const routerObj = await routerContract();
@@ -284,7 +188,7 @@ const swapTokensToWeth = async () => {
 
   try {
     const tx = await routerObj.connect(signer).swapExactTokensForTokens(
-      toWei('1'), // Cantidad exacta de tokens de entrada (1 token)
+      toWei(tokenAmount.toString()), // Cantidad exacta de tokens de entrada (1 token)
 
       0, // Cantidad mínima de tokens de salida
       [
@@ -310,7 +214,9 @@ const swapTokensToWeth = async () => {
 
 // swapTokensToWeth();
 
-const swapWethToTokens = async () => {
+export const swapWethToTokens = async (tokenAmount) => {
+  console.log(typeof tokenAmount);
+  const exactTokenAmount = Math.floor(tokenAmount);
   const allowanceStatus = await wethAllowance();
   console.log('Status de aprobación: ', allowanceStatus);
   const routerObj = await routerContract();
@@ -326,7 +232,7 @@ const swapWethToTokens = async () => {
 
   try {
     const tx = await routerObj.connect(signer).swapTokensForExactTokens(
-      toWei('1'),
+      toWei(exactTokenAmount.toString()),
 
       toWei(initialWethBalance), // Cantidad mínima de tokens de salida
       [
@@ -336,18 +242,16 @@ const swapWethToTokens = async () => {
       ],
       signer.getAddress(), // Dirección del destinatario de los tokens de salida
       Math.floor(Date.now() / 1000) + 60 * 10 // Plazo de validez de la transacción
-      // {
-      //   gasLimit: 1000000,
-      // }
     );
-    const result = await tx.wait();
-    console.log(result);
+    const receipt = await tx.wait();
+    console.log(receipt);
     const afterSwapTokenBalance = await tokenBalance();
     const afterSwapWethBalance = await wethBalance();
     console.log(afterSwapTokenBalance, afterSwapWethBalance);
+    return receipt;
   } catch (error) {
     console.log(error);
   }
 };
 
-swapWethToTokens();
+// swapWethToTokens();

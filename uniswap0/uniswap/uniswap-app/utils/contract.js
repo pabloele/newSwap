@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { mtb24ABI, routerABI, wethABI } from './abi';
 
-export const tokenContract = async (address) => {
+export const mtb24Contract = async (address) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const { ethereum } = window;
   if (ethereum) {
@@ -18,7 +18,7 @@ export const wethContract = async () => {
   if (ethereum) {
     const signer = provider.getSigner();
     const contractReader = new ethers.Contract(
-      '0x74A4A85C611679B73F402B36c0F84A7D2CcdFDa3',
+      process.env.NEXT_PUBLIC_WETH_ADDRESS,
       wethABI,
       signer
     );
@@ -33,7 +33,7 @@ export const routerContract = async () => {
   if (ethereum) {
     const signer = provider.getSigner();
     const contractReader = new ethers.Contract(
-      '0x5E4ebDF023C6e62BbCF6aC0E683641B42EF8e224',
+      process.env.NEXT_PUBLIC_ROUTER,
       routerABI,
       signer
     );
