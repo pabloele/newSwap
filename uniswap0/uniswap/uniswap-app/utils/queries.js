@@ -4,7 +4,7 @@ import { toEth, toWei } from './ether-utils';
 const WETH_ADDRESS = process.env.NEXT_PUBLIC_WETH_ADDRESS;
 const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_MTB24_ADDRESS;
 
-//viniswap
+//Viniswap
 
 export const tokenBalance = async () => {
   try {
@@ -23,7 +23,7 @@ export const tokenBalance = async () => {
   }
 };
 
-// tokenBalance();
+
 
 export const wethBalance = async () => {
   try {
@@ -43,7 +43,7 @@ export const wethBalance = async () => {
   }
 };
 
-// wethBalance();
+
 
 export const tokenAllowance = async () => {
   try {
@@ -65,7 +65,7 @@ export const tokenAllowance = async () => {
     console.log(error);
   }
 };
-// tokenAllowance();
+
 
 export const wethAllowance = async () => {
   try {
@@ -87,7 +87,7 @@ export const wethAllowance = async () => {
     console.log(error);
   }
 };
-// wethAllowance();
+
 
 export const increaseTokenAllowance = async (amount) => {
   try {
@@ -138,8 +138,8 @@ export const increaseWethAllowance = async (amount) => {
   }
 };
 
-// increaseWethAllowance(0);
-// wethAllowance();
+// increaseWethAllowance(0.1);
+
 
 export const getTokenPrice = async () => {
   try {
