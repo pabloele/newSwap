@@ -1,31 +1,31 @@
-import '../styles/globals.css';
-import '@rainbow-me/rainbowkit/styles.css';
-import merge from 'lodash.merge';
+import "../styles/globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import merge from "lodash.merge";
 
 import {
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
   midnightTheme,
-} from '@rainbow-me/rainbowkit';
+} from "@rainbow-me/rainbowkit";
 
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { infuraProvider } from 'wagmi/providers/infura';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+// import { infuraProvider } from "wagmi/providers/infura";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
 
 const OPsepolia = {
   id: 11155420,
-  name: 'OP Sepolia',
-  network: 'optimismSepolia',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  name: "OP Sepolia",
+  network: "optimismSepolia",
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   rpcUrls: {
-    public: 'https://sepolia.optimism.io',
+    public: "https://sepolia.optimism.io",
   },
   blockExplorers: {
     default: {
-      name: 'OptimisticEtherscan',
-      url: 'https://sepolia-optimistic.etherscan.io',
+      name: "OptimisticEtherscan",
+      url: "https://sepolia-optimistic.etherscan.io",
     },
   },
 };
@@ -49,7 +49,7 @@ const { provider, chains } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'Uniswap',
+  appName: "Uniswap",
   chains,
 });
 
@@ -61,8 +61,8 @@ const wagmiClient = createClient({
 
 const myTheme = merge(midnightTheme(), {
   colors: {
-    accentColor: '#1818b',
-    accentColorForeground: '#fff',
+    accentColor: "#1818b",
+    accentColorForeground: "#fff",
   },
 });
 
